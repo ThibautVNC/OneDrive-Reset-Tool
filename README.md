@@ -52,6 +52,16 @@ aware of before you use it:
 The switch is purely cosmetic. Colours only, no behaviour changes, and it can be
 toggled at any moment, including after a reset has already run.
 
+## No-GUI edition
+
+`OneDrive_Reset_NoGUI.bat` does exactly the same thing in a console window: no
+form, no hacker mode, just output on screen. Handy for remote sessions, RMM
+deployment or a login script.
+
+- Options are five `1` / `0` variables at the top of the file.
+- Run it with `/Y` to skip the confirmation prompt and the `pause` at the end.
+- It writes the same backups and `log.txt` as the GUI version.
+
 ## Requirements
 
 - Windows 10 or 11 (also fine on Windows Server / RDS).
@@ -135,6 +145,14 @@ If a backup fails, the tool aborts before deleting anything.
   wraps and is slightly clipped. Cosmetic only.
 - Some antivirus and EDR products flag a batch file that launches PowerShell and
   edits the registry. Whitelist it or run it from a trusted location.
+
+## Files
+
+| File | What it is |
+| --- | --- |
+| `OneDrive_Reset_Tool.bat` | GUI version (batch launcher + embedded PowerShell) |
+| `OneDrive_Reset_NoGUI.bat` | Plain console version, same actions |
+| `screenshots/` | The images used in this README |
 
 ## Credits
 

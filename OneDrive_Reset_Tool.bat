@@ -52,18 +52,23 @@ function Write-Log {
 
 function Get-OneDriveExe {
     # Prefer the path OneDrive registered itself, then the three standard install locations.
+    # CurrentVersionPath points to a folder, so OneDrive.exe is appended when needed.
     $candidates = @()
-    try {
-        $registered = (Get-ItemProperty -Path $OneDriveKey -Name OneDrivePath -ErrorAction Stop).OneDrivePath
-        if ($registered) { $candidates += $registered }
-    } catch { }
+    foreach ($valueName in @('CurrentVersionPath', 'OneDrivePath')) {
+        try {
+            $registered = (Get-ItemProperty -Path $OneDriveKey -Name $valueName -ErrorAction Stop).$valueName
+        } catch { continue }
+        if (-not $registered) { continue }
+        if ($registered -like '*.exe') { $candidates += $registered }
+        else { $candidates += (Join-Path $registered 'OneDrive.exe') }
+    }
     $candidates += (Join-Path $env:LOCALAPPDATA 'Microsoft\OneDrive\OneDrive.exe')
     $candidates += (Join-Path $env:ProgramFiles 'Microsoft OneDrive\OneDrive.exe')
     if (${env:ProgramFiles(x86)}) {
         $candidates += (Join-Path ${env:ProgramFiles(x86)} 'Microsoft OneDrive\OneDrive.exe')
     }
     foreach ($c in $candidates) {
-        if ($c -and (Test-Path -LiteralPath $c)) { return $c }
+        if ($c -and (Test-Path -LiteralPath $c -PathType Leaf)) { return $c }
     }
     return $null
 }
